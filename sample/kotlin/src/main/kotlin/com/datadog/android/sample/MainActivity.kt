@@ -28,6 +28,7 @@ import androidx.navigation.compose.rememberNavController
 import com.datadog.android.compose.NavigationViewTrackingEffect
 import com.datadog.android.rum.GlobalRum
 import com.google.accompanist.appcompattheme.AppCompatTheme
+import okhttp3.OkHttpClient
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

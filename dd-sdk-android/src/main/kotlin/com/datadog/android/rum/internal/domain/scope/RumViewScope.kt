@@ -167,9 +167,9 @@ internal open class RumViewScope(
         event: RumRawEvent,
         writer: DataWriter<Any>
     ): RumScope? {
-        if (RumDebugObject.isTargetEvent(event)) {
+//        if (RumDebugObject.isTargetEvent(event)) {
             Log.d("Datadog:debug", "---- RumViewScope($name)::delegateToChildren($event)")
-        }
+//        }
 
         when (event) {
             is RumRawEvent.ResourceSent -> onResourceSent(event, writer)

@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.datadog.android.Datadog
 import com.datadog.android.Datadog.setUserInfo
 import com.datadog.android.DatadogEventListener
+import com.datadog.android.DatadogInterceptor
 import com.datadog.android.DatadogSite
 import com.datadog.android.core.configuration.Configuration
 import com.datadog.android.core.configuration.Credentials
@@ -45,7 +46,11 @@ import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import io.opentracing.rxjava3.TracingRxJava3Utils
 import io.opentracing.util.GlobalTracer
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
+import okhttp3.Request
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -95,6 +100,22 @@ class SampleApplication : Application() {
 //        initializeTimber()
 //
 //        initializeImageLoaders()
+
+
+        GlobalScope.launch(Dispatchers.IO) {
+            val client = OkHttpClient.Builder()
+                .addInterceptor(DatadogInterceptor(traceSamplingRate = 100.0F))
+                .addNetworkInterceptor(TracingInterceptor(traceSamplingRate = 100.0F))
+                .eventListenerFactory(DatadogEventListener.Factory())
+                .build()
+
+            val request = Request.Builder()
+                .url("https://www.example.com/")
+                .build()
+
+            client.newCall(request)
+                .execute()
+        }
     }
 
     private fun initializeImageLoaders() {
