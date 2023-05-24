@@ -202,7 +202,7 @@ internal open class RumViewScope(
             else -> delegateEventToChildren(event, writer)
         }
 
-        return if (isViewComplete()) {
+        return if (isViewCompleteDebug()) {
             null
         } else {
             this
@@ -1017,6 +1017,22 @@ internal open class RumViewScope(
             pendingLongTaskCount
         // we use <= 0 for pending counter as a safety measure to make sure this ViewScope will
         // be closed.
+        return stopped && activeResourceScopes.isEmpty() && (pending <= 0L)
+    }
+
+    private fun isViewCompleteDebug(): Boolean {
+        val pending = pendingActionCount +
+            pendingResourceCount +
+            pendingErrorCount +
+            pendingLongTaskCount
+        // we use <= 0 for pending counter as a safety measure to make sure this ViewScope will
+        // be closed.
+
+        Log.d(
+            "Datadog:debug",
+            "---- RumViewScope($name): isViewCompleteDebug(), $stopped, ${activeResourceScopes.isEmpty()}, ($pendingActionCount, $pendingResourceCount, $pendingErrorCount, $pendingLongTaskCount)"
+        )
+
         return stopped && activeResourceScopes.isEmpty() && (pending <= 0L)
     }
 
