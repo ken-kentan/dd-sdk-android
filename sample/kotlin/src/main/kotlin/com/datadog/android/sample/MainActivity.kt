@@ -14,6 +14,13 @@ import androidx.compose.material.Button
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
+import androidx.compose.ui.draw.drawWithContent
 import androidx.core.net.toUri
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -37,31 +44,44 @@ class MainActivity : AppCompatActivity() {
                     route = "route",
                 ) {
                     composable("home") {
-                        Surface {
+                        Surface(
+                            modifier = Modifier.onInitialRender {
+                                GlobalRum.get().addTiming("timing_test")
+                            }
+                        ) {
                             Column {
                                 Text("Home screen")
                                 Button(onClick = { navController.navigate("item") }) {
                                     Text("Goto item screen")
-                                }
-
-                                LaunchedEffect(Unit) {
-                                    GlobalRum.get().addTiming("timing_test")
                                 }
                             }
                         }
                     }
 
                     composable("item") {
-                        Surface {
-                            Text("Item screen")
-
-                            LaunchedEffect(Unit) {
+                        Surface(
+                            modifier = Modifier.onInitialRender {
                                 GlobalRum.get().addTiming("timing_test")
                             }
+                        ) {
+                            Text("Item screen")
                         }
                     }
                 }
             }
+        }
+    }
+}
+
+private fun Modifier.onInitialRender(
+    onRendered: () -> Unit,
+) = composed {
+    var called by remember { mutableStateOf(false) }
+    drawWithContent {
+        drawContent()
+        if (!called) {
+            called = true
+            onRendered()
         }
     }
 }
