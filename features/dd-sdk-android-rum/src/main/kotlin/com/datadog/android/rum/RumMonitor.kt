@@ -292,4 +292,7 @@ interface RumMonitor {
     @Suppress("FunctionName")
     @JvmSynthetic
     fun _getInternal(): _RumInternalProxy?
+
+    // Expose this method to reproduce the issue easily
+    fun addLongTask(durationNs: Long, target: String)
 }

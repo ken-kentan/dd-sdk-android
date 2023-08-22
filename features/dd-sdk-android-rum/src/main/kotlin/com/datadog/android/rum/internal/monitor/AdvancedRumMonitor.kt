@@ -24,7 +24,7 @@ internal interface AdvancedRumMonitor : RumMonitor, AdvancedNetworkRumMonitor {
 
     fun sendWebViewEvent()
 
-    fun addLongTask(durationNs: Long, target: String)
+//    fun addLongTask(durationNs: Long, target: String)
 
     fun addCrash(
         message: String,

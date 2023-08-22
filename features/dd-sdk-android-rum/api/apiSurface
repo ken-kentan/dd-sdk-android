@@ -104,6 +104,7 @@ interface com.datadog.android.rum.RumMonitor
   fun stopSession()
   var debug: Boolean
   fun _getInternal(): _RumInternalProxy?
+  fun addLongTask(Long, String)
 enum com.datadog.android.rum.RumPerformanceMetric
   - FLUTTER_BUILD_TIME
   - FLUTTER_RASTER_TIME

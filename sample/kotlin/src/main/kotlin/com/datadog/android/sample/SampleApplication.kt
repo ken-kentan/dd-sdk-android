@@ -88,6 +88,9 @@ class SampleApplication : Application() {
         Stetho.initializeWithDefaults(this)
         initializeDatadog()
 
+        // Trigger AddLongTask event manually to simulate the issue.
+        GlobalRumMonitor.get().addLongTask(500L, "test")
+
         initializeTimber()
 
         initializeImageLoaders()
@@ -182,6 +185,7 @@ class SampleApplication : Application() {
             })
             .setActionEventMapper(object : EventMapper<ActionEvent> {
                 override fun map(event: ActionEvent): ActionEvent {
+                    Log.d("Datadog:debug", "ActionEvent!: $event")
                     event.context?.additionalProperties?.put(ATTR_IS_MAPPED, true)
                     return event
                 }
